@@ -28,13 +28,14 @@ Nombre VARCHAR(60) CONSTRAINT dep_nom_nn NOT NULL
 CREATE TABLE Municipio (
 Id_municipio NUMBER(10) CONSTRAINT mun_id_pk PRIMARY KEY,
 Nombre VARCHAR(60) CONSTRAINT mun_nom_nn NOT NULL,
-Id_departamento NUMBER(10) CONSTRAINT mun_dep_fk REFERENCES Departamento(Id_departamento)
+Id_departamento NUMBER(10) CONSTRAINT mun_dep_nn NOT NULL CONSTRAINT mun_dep_fk REFERENCES Departamento(Id_departamento)
 );
 
 CREATE TABLE Barrio (
 Id_barrio NUMBER(10) CONSTRAINT bar_id_pk PRIMARY KEY,
 Nombre VARCHAR(60) CONSTRAINT bar_nom_nn NOT NULL,
-Id_municipio NUMBER CONSTRAINT bar_mun_fk REFERENCES Municipio(Id_municipio)
+Id_municipio NUMBER CONSTRAINT bar_mun_nn NOT NULL CONSTRAINT bar_mun_fk REFERENCES Municipio(Id_municipio)
+
 );
 
 -- ---------------------------------------------------------------------
@@ -54,7 +55,7 @@ CONSTRAINT sup_doc_uk UNIQUE,
 Nombre_completo VARCHAR(100) CONSTRAINT sup_nom_nn NOT NULL,
 Vigencia VARCHAR(2) CONSTRAINT sup_vig_nn NOT NULL,
 Fecha_nacimiento DATE CONSTRAINT sup_fec_nn NOT NULL,
-Id_usuario VARCHAR(30) CONSTRAINT sup_usu_fk REFERENCES Usuario(Usuario)
+ Id_usuario VARCHAR(30) CONSTRAINT sup_usu_nn NOT NULL CONSTRAINT sup_usu_fk REFERENCES Usuario(Usuario)
 );
 
 CREATE TABLE Recolector (
@@ -68,8 +69,7 @@ Vigencia VARCHAR(2) CONSTRAINT rcl_vig_nn NOT NULL,
 Fecha_nacimiento DATE CONSTRAINT rcl_fec_nn NOT NULL,
 Id_supervisor NUMBER(20) CONSTRAINT rcl_sup_nn NOT NULL
 CONSTRAINT rcl_sup_fk REFERENCES Supervisor(Id_supervisor),
-Id_usuario VARCHAR(30) CONSTRAINT rcl_usu_uk UNIQUE
-CONSTRAINT rcl_usu_fk REFERENCES Usuario(Usuario)
+Id_usuario VARCHAR(30) CONSTRAINT rcl_usu_nn NOT NULL CONSTRAINT rcl_usu_fk REFERENCES Usuario(Usuario)
 );
 
 CREATE TABLE Recuentista (
