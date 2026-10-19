@@ -1,0 +1,170 @@
+USUARIO: prueba
+CONTRASEÑA: prueba
+
+
+
+PRUEBAS DE NUEVA BASE DE DATOS
+
+
+SQL> CREATE TABLE Departamento (
+  2  Id_departamento NUMBER(10) CONSTRAINT dep_id_pk PRIMARY KEY,
+  3  Nombre VARCHAR(60) CONSTRAINT dep_nom_nn NOT NULL CONSTRAINT dep_nom_uk UNIQUE
+  4  );
+
+Tabla creada.
+
+SQL>
+SQL> CREATE TABLE Municipio (
+  2  Id_municipio NUMBER(10) CONSTRAINT mun_id_pk PRIMARY KEY,
+  3  Nombre VARCHAR(60) CONSTRAINT mun_nom_nn NOT NULL,
+  4  Id_departamento NUMBER(10) CONSTRAINT mun_dep_nn NOT NULL CONSTRAINT mun_dep_fk REFERENCES Departamento(Id_departamento)
+  5  );
+
+Tabla creada.
+
+SQL>
+SQL> CREATE TABLE Barrio (
+  2  Id_barrio NUMBER(10) CONSTRAINT bar_id_pk PRIMARY KEY,
+  3  Nombre VARCHAR(60) CONSTRAINT bar_nom_nn NOT NULL,
+  4  Id_municipio NUMBER(10) CONSTRAINT bar_mun_nn NOT NULL CONSTRAINT bar_mun_fk REFERENCES Municipio(Id_municipio)
+  5  );
+
+
+SQL> CREATE TABLE Recolector (
+  2  Documento NUMBER(20) CONSTRAINT rcl_doc_pk PRIMARY KEY,
+  3  Credencial VARCHAR(20) CONSTRAINT rcl_cre_nn NOT NULL CONSTRAINT rcl_cre_uk UNIQUE,
+  4  Nombre VARCHAR(150) CONSTRAINT rcl_nom_nn NOT NULL,
+  5  Apellido VARCHAR(150) CONSTRAINT rcl_ape_nn NOT NULL
+  6  );
+
+Tabla creada.
+
+SQL> CREATE TABLE Vivienda (
+  2  Id_vivienda NUMBER CONSTRAINT viv_id_pk PRIMARY KEY,
+  3  Direccion VARCHAR(150) CONSTRAINT viv_dir_nn NOT NULL,
+  4  Cant_hogares NUMBER(20) CONSTRAINT viv_can_nn NOT NULL
+  5  CONSTRAINT viv_can_ck CHECK (Cant_hogares > 0),
+  6  Estado VARCHAR(20) CONSTRAINT viv_est_nn NOT NULL,
+  7  Id_barrio NUMBER(10) CONSTRAINT viv_bar_nn NOT NULL CONSTRAINT viv_bar_fk REFERENCES Barrio(Id_barrio)
+  8  );
+
+Tabla creada.
+
+SQL> CREATE TABLE Hogar (
+  2  Id_hogar NUMBER(10) CONSTRAINT hog_id_pk PRIMARY KEY,
+  3  Num_hogar NUMBER(10) CONSTRAINT hog_num_nn NOT NULL,
+  4  Total_personas NUMBER(10) CONSTRAINT hog_tot_nn NOT NULL
+  5  CONSTRAINT hog_tot_ck CHECK (Total_personas > 0),
+  6  Estado_ciclo VARCHAR(20) CONSTRAINT hog_est_nn NOT NULL,
+  7  Id_vivienda NUMBER(10) CONSTRAINT hog_viv_nn NOT NULL CONSTRAINT hog_viv_fk REFERENCES Vivienda(Id_vivienda),
+  8  Documento_recolector NUMBER(20) CONSTRAINT hog_rcl_fk REFERENCES Recolector(Documento),
+  9  Fecha_asignacion DATE,
+ 10  CONSTRAINT hog_viv_num_uk UNIQUE (Id_vivienda, Num_hogar)
+ 11  );
+
+Tabla creada.
+
+SQL> CREATE TABLE Dispositivo (
+  2  Id_dispositivo NUMBER(10) CONSTRAINT dis_id_pk PRIMARY KEY,
+  3  Estado VARCHAR(20) CONSTRAINT dis_est_nn NOT NULL,
+  4  Documento_recolector NUMBER(10) CONSTRAINT dis_rcl_fk REFERENCES Recolector(Documento)
+  5  );
+
+Tabla creada.
+
+SQL> CREATE TABLE Encuestado (
+  2  Documento VARCHAR(20) CONSTRAINT enc_doc_pk PRIMARY KEY,
+  3  Nombre VARCHAR(150) CONSTRAINT enc_nom_nn NOT NULL,
+  4  Apellido VARCHAR(150) CONSTRAINT enc_ape_nn NOT NULL,
+  5  Parentesco VARCHAR(30) CONSTRAINT enc_par_nn NOT NULL,
+  6  Telefono NUMBER(15) CONSTRAINT enc_tel_nn NOT NULL,
+  7  Correo VARCHAR(100),
+  8  Id_hogar NUMBER CONSTRAINT enc_hog_nn NOT NULL CONSTRAINT enc_hog_fk REFERENCES Hogar(Id_hogar),
+  9  Id_dispositivo NUMBER CONSTRAINT enc_dis_nn NOT NULL CONSTRAINT enc_dis_fk REFERENCES Dispositivo(Id_dispositivo),
+ 10  Fecha_entrega DATE CONSTRAINT enc_fen_nn NOT NULL,
+ 11  Fecha_recogida DATE,
+ 12  CONSTRAINT enc_fre_ck CHECK (Fecha_recogida IS NULL OR Fecha_recogida >= Fecha_entrega)
+ 13  );
+
+Tabla creada.
+
+SQL> CREATE TABLE Visita (
+  2  Id_visita NUMBER(10) CONSTRAINT vis_id_pk PRIMARY KEY,
+  3  Fecha_visita DATE CONSTRAINT vis_fec_nn NOT NULL,
+  4  Estado VARCHAR(20) CONSTRAINT vis_est_nn NOT NULL,
+  5  Resultado VARCHAR(20) CONSTRAINT vis_res_nn NOT NULL,
+  6  Dias_completados NUMBER(10) CONSTRAINT vis_dia_nn NOT NULL,
+  7  Cap_en_curso VARCHAR(5) CONSTRAINT vis_cap_nn NOT NULL,
+  8  Observaciones VARCHAR(300),
+  9  Id_hogar NUMBER(10) CONSTRAINT vis_hog_nn NOT NULL CONSTRAINT vis_hog_fk REFERENCES Hogar(Id_hogar),
+ 10  Documento_recolector NUMBER(10) CONSTRAINT vis_rcl_nn NOT NULL CONSTRAINT vis_rcl_fk REFERENCES Recolector(Documento)
+ 11  );
+
+Tabla creada.
+
+SQL> CREATE TABLE Lugar_Compra (
+  2  Id_lugar NUMBER(10) CONSTRAINT lug_id_pk PRIMARY KEY,
+  3  Nombre VARCHAR(80) CONSTRAINT lug_nom_nn NOT NULL
+  4  );
+
+Tabla creada.
+
+SQL>
+SQL> CREATE TABLE Forma_Adquisicion (
+  2  Id_forma NUMBER(10) CONSTRAINT for_id_pk PRIMARY KEY,
+  3  Nombre VARCHAR(60) CONSTRAINT for_nom_nn NOT NULL
+  4  );
+
+Tabla creada.
+
+SQL>
+SQL> CREATE TABLE Tipo_Gasto (
+  2  Id_tipo NUMBER(10) CONSTRAINT tip_id_pk PRIMARY KEY,
+  3  Nombre VARCHAR(40) CONSTRAINT tip_nom_nn NOT NULL
+  4  );
+
+Tabla creada.
+
+SQL>
+SQL> CREATE TABLE Unidad_Medida (
+  2  Id_unidad NUMBER(10) CONSTRAINT uni_id_pk PRIMARY KEY,
+  3  Nombre VARCHAR(30) CONSTRAINT uni_nom_nn NOT NULL
+  4  );
+
+Tabla creada.
+
+SQL>
+SQL> CREATE TABLE Frecuencia_Compra (
+  2  Id_frecuencia NUMBER(10) CONSTRAINT fre_id_pk PRIMARY KEY,
+  3  Nombre VARCHAR(40) CONSTRAINT fre_nom_nn NOT NULL
+  4  );
+
+Tabla creada.
+
+SQL> CREATE TABLE Gastos (
+  2  Id_gasto NUMBER(10) CONSTRAINT gas_id_pk PRIMARY KEY,
+  3  Articulo VARCHAR(100) CONSTRAINT gas_art_nn NOT NULL,
+  4  Cantidad NUMBER(10,2) CONSTRAINT gas_can_nn NOT NULL
+  5  CONSTRAINT gas_can_ck CHECK (Cantidad > 0),
+  6  Valor_producto NUMBER(12,2) CONSTRAINT gas_val_nn NOT NULL
+  7  CONSTRAINT gas_val_ck CHECK (Valor_producto >= 0),
+  8  Fecha_registro DATE CONSTRAINT gas_fre_nn NOT NULL,
+  9  Estado VARCHAR(20) DEFAULT 'REGISTRADO' CONSTRAINT gas_est_nn NOT NULL
+ 10  CONSTRAINT gas_est_ck CHECK (Estado IN ('REGISTRADO','CORREGIDO','CON_INCONSISTENCIA','VALIDADO')),
+ 11  Id_hogar NUMBER(10) CONSTRAINT gas_hog_nn NOT NULL CONSTRAINT gas_hog_fk REFERENCES Hogar(Id_hogar),
+ 12  Id_encuestado VARCHAR(20) CONSTRAINT gas_enc_nn NOT NULL CONSTRAINT gas_enc_fk REFERENCES Encuestado(Documento),
+ 13  Id_lugar NUMBER(10) CONSTRAINT gas_lug_fk REFERENCES Lugar_Compra(Id_lugar),
+ 14  Id_forma NUMBER(10) CONSTRAINT gas_for_nn NOT NULL CONSTRAINT gas_for_fk REFERENCES Forma_Adquisicion(Id_forma),
+ 15  Id_tipo NUMBER(10) CONSTRAINT gas_tip_nn NOT NULL CONSTRAINT gas_tip_fk REFERENCES Tipo_Gasto(Id_tipo),
+ 16  Id_unidad NUMBER(10) CONSTRAINT gas_uni_nn NOT NULL CONSTRAINT gas_uni_fk REFERENCES Unidad_Medida(Id_unidad),
+ 17  Id_frecuencia NUMBER(10) CONSTRAINT gas_fcu_nn NOT NULL CONSTRAINT gas_fcu_fk REFERENCES Frecuencia_Compra(Id_frecuencia),
+ 18  Documento_recolector NUMBER(10) CONSTRAINT gas_rcl_fk REFERENCES Recolector(Documento),
+ 19  Fecha_modificacion DATE,
+ 20  Modificacion VARCHAR(200),
+ 21  CONSTRAINT gas_cor_ck CHECK ((Documento_recolector IS NULL AND Fecha_modificacion IS NULL AND Modificacion IS NULL)
+ 22  OR (Documento_recolector IS NOT NULL AND Fecha_modificacion IS NOT NULL AND Modificacion IS NOT NULL)),
+ 23  CONSTRAINT gas_mod_ck CHECK (Fecha_modificacion IS NULL OR Fecha_modificacion >= Fecha_registro)
+ 24  );
+
+Tabla creada.
+
