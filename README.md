@@ -1,11 +1,49 @@
 # Proyecto-Integrador
-​ConexionBD.java (La Puerta de Enlace):
-​Es la clase encargada de establecer la comunicación con el servidor de Oracle. Contiene la dirección IP, el puerto (1521), el usuario y la contraseña necesarios para abrir el canal de red entre la aplicación y la base de datos.
-​GastoDAO.java (El Puente de Datos - DAO):
-​Significa Data Access Object (Objeto de Acceso a Datos). Es la clase que traduce las acciones del usuario (como registrar el gasto de un artículo) en comandos seguros de SQL (INSERT) para que la información viaje desde la interfaz gráfica y quede almacenada directamente en las tablas de Oracle.
-​VentanaLogin.java (Selector de Módulos):
-​Permite elegir qué rol se va a presentar (Recolector o Encuestado) para abrir de forma limpia las pantallas correspondientes durante la sustentación.
-​VentanaEncuestado.java (Módulo de Gastos Diarios):
-​Es la interfaz gráfica donde el usuario registra los artículos comprados (nombre, cantidad, valor, tipo de gasto, etc.). Al presionar el botón de finalizar el día, los datos se recogen de la tabla visual y se envían a la base de datos a través del GastoDAO.
-​VentanaCitasPendientes.java y VentanaSeguimientoHogar.java (Módulo de Campo):
-​Son las pantallas diseñadas para simular la agenda y el control de las visitas que realiza el recolector a los hogares durante el ciclo de la encuesta.
+​
+Descripción
+
+Sistema en Java para la gestión de encuestas de hogares, registro de gastos, visitas y recolección de datos. El proyecto está construido utilizando Maven y emplea una base de datos Oracle para la persistencia de datos. Sigue una arquitectura de software estructurada en capas (Presentación, Negocio, Persistencia y Control).
+
+Requisitos del Sistema
+
+Java (JDK)
+
+Apache Maven (pom.xml incluido)
+
+Base de Datos Oracle
+
+Entorno de desarrollo compatible (ej. Apache NetBeans, según indica el archivo nbactions.xml y los scripts SQL).
+
+Estructura del Proyecto
+
+El código fuente está organizado en los siguientes paquetes principales (src/main/java/):
+
+control: Contiene el punto de entrada de la aplicación (Main.java).
+
+negocio: Modelos y lógica de negocio (ej. Persona, Visita, Recolector, Encuestado, Sesion).
+
+persistencia: Clases de acceso a datos y conexión con Oracle (ConexionOracle, LlamadasOracle, PersistenciaHogar, PersistenciaGastos, etc.).
+
+presentacion: Clases para la interfaz gráfica, generación de reportes en PDF y menús por rol (Pantalla, Formulario, InformePdf, etc.).
+
+Recursos Adicionales
+
+sql/: Directorio con múltiples scripts numerados del 01 al 12 para la creación de la base de datos, catálogos, roles de usuario y conexión.
+
+src/main/resources/fonts/: Fuentes utilizadas para la generación de reportes en PDF (DejaVuSans).
+
+Documentación Interna
+
+El proyecto cuenta con varios archivos de texto explicativos para módulos específicos. Se recomienda revisarlos para más detalles:
+
+LEEME_ACTUALIZACION.txt
+
+LEEME_CAMBIOS_INTERFAZ.txt
+
+LEEME_DISENO.txt / LEEME_DISENO_PDF.txt
+
+LEEME_INFORMES.txt
+
+LEEME_REVISION_DIAS.txt
+
+LEEME_TIPO_GASTO.txt
